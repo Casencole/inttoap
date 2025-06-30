@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <termios.h>
+// #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-#define BUFSIZE 100
+#define BUFSIZE 1
 
 int main(int argc, char *argv[]){
     /**** File Checking ****/
@@ -27,13 +27,13 @@ int main(int argc, char *argv[]){
     /**** Output ****/
     char buf[BUFSIZE];
     int retval;
-    
+   
     while ( (retval = read(fd, buf, 1)) ) {
         if (retval == -1) {
             printf("ERROR: Failed to read '%s'", argv[1]);
             exit(EXIT_FAILURE);
         }
-        printf("%c", retval);
+        printf("%c", buf[0]);
     }
 
 
