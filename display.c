@@ -7,6 +7,8 @@
 #define BUFSIZE 100
 #define DEBUG 1
 
+// void err_exit(int var, int fail_val, char* err_msg, int exit_code);
+
 int main(int argc, char *argv[]){
     /**** Debug ****/
     int retval;
@@ -59,14 +61,17 @@ int main(int argc, char *argv[]){
     char buf[BUFSIZE];
   
     // Read and Write each character
+    int quote_Count = 0;
     while ( (retval = read(fd, buf, 1)) ) {
         if (retval == -1) {
             printf("ERROR: Failed to read '%s'", argv[1]);
             exit(EXIT_FAILURE);
         }
-        
-        // Note this does account for a cell containing the delimiter
-        if (buf[0] == delim){
+
+        // Each " in a csv or tsv is a double quote so when you see a delimiter
+        // and the quotes are at an odd count you are still inside a cell
+        if (buf[0] == '\"') quote_Count++;
+        if ( (buf[0] == delim) && ((quote_Count % 2) == 0 )){
             printf("\t");
         }
         printf("%c", buf[0]);
@@ -75,3 +80,10 @@ int main(int argc, char *argv[]){
     printf("\n");
     return 0;
 }
+
+// void err_exit(int var, int fail_val, char* err_msg, int exit_code){
+//     if (var == fail_val) {
+//         printf("%s", err_msg);
+//         exit(exit_code);
+//     }
+// }
